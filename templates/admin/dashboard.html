@@ -1,0 +1,395 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - VZRD{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <div class="admin-header animate__animated animate__fadeInDown">
+            <h1 class="admin-title">
+                <span class="japanese-accent">管理</span>
+                <br>Dashboard Administrativo
+            </h1>
+            <p class="admin-subtitle">Painel de controle da VZRD</p>
+        </div>
+        
+        <!-- Statistics Cards -->
+        <div class="row mb-5">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card animate__animated animate__fadeInUp">
+                    <div class="stat-icon">
+                        <i class="fas fa-tshirt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number">{{ total_products }}</h3>
+                        <p class="stat-label">Produtos</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card animate__animated animate__fadeInUp animate__delay-1s">
+                    <div class="stat-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number">{{ total_orders }}</h3>
+                        <p class="stat-label">Pedidos</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card animate__animated animate__fadeInUp animate__delay-2s">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number">{{ total_users }}</h3>
+                        <p class="stat-label">Usuários</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card animate__animated animate__fadeInUp animate__delay-3s">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number">{{ pending_orders }}</h3>
+                        <p class="stat-label">Pendentes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Recent Orders -->
+            <div class="col-lg-8 mb-4">
+                <div class="admin-card animate__animated animate__fadeInLeft">
+                    <div class="card-header">
+                        <h3 class="card-title">Pedidos Recentes</h3>
+                        <a href="{{ url_for('admin_orders') }}" class="btn btn-outline-primary btn-sm">Ver Todos</a>
+                    </div>
+                    <div class="card-body">
+                        {% if recent_orders %}
+                        <div class="table-responsive">
+                            <table class="table admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Cliente</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Data</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in recent_orders %}
+                                    <tr>
+                                        <td>#{{ order.id }}</td>
+                                        <td>{{ order.get_customer_name() }}</td>
+                                        <td>R$ {{ "%.2f"|format(order.total_amount) }}</td>
+                                        <td><span class="status-badge status-{{ order.status }}">{{ order.status.title() }}</span></td>
+                                        <td>{{ order.created_at.strftime('%d/%m/%Y') }}</td>
+                                        <td>
+                                            <a href="{{ url_for('admin_order_detail', order_id=order.id) }}" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <p class="text-muted text-center">Nenhum pedido encontrado</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Low Stock Products -->
+            <div class="col-lg-4 mb-4">
+                <div class="admin-card animate__animated animate__fadeInRight">
+                    <div class="card-header">
+                        <h3 class="card-title">Estoque Baixo</h3>
+                        <a href="{{ url_for('admin_products') }}" class="btn btn-outline-primary btn-sm">Gerenciar</a>
+                    </div>
+                    <div class="card-body">
+                        {% if low_stock_products %}
+                        <div class="low-stock-list">
+                            {% for product in low_stock_products %}
+                            <div class="low-stock-item">
+                                <div class="product-info">
+                                    <strong>{{ product.name }}</strong>
+                                    <small class="text-danger">{{ product.stock_quantity }} restantes</small>
+                                </div>
+                                <span class="stock-alert">⚠️</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p class="text-muted text-center">Estoque em dia!</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="row">
+            <div class="col-12">
+                <div class="admin-card animate__animated animate__fadeInUp">
+                    <div class="card-header">
+                        <h3 class="card-title">Ações Rápidas</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="quick-actions">
+                            <a href="{{ url_for('admin_add_product') }}" class="quick-action-btn">
+                                <i class="fas fa-plus"></i>
+                                <span>Adicionar Produto</span>
+                            </a>
+                            <a href="{{ url_for('admin_orders') }}?status=pending" class="quick-action-btn">
+                                <i class="fas fa-clock"></i>
+                                <span>Pedidos Pendentes</span>
+                            </a>
+                            <a href="{{ url_for('admin_contacts') }}" class="quick-action-btn">
+                                <i class="fas fa-envelope"></i>
+                                <span>Mensagens</span>
+                            </a>
+                            <a href="{{ url_for('admin_newsletter') }}" class="quick-action-btn">
+                                <i class="fas fa-users"></i>
+                                <span>Newsletter</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.admin-section {
+    padding: var(--space-2xl) 0;
+    background: var(--bg-primary);
+    min-height: 100vh;
+}
+
+.admin-header {
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+}
+
+.admin-title {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    color: var(--text-primary);
+    margin-bottom: var(--space-lg);
+    text-shadow: 0 0 20px var(--purple-glow);
+}
+
+.japanese-accent {
+    font-family: var(--font-japanese);
+    color: var(--blue-neon);
+    font-size: 1.2rem;
+    text-shadow: 0 0 15px var(--blue-glow);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.admin-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    text-align: center;
+    transition: var(--transition-normal);
+    height: 100%;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--purple-primary);
+    box-shadow: 0 10px 30px rgba(157, 78, 221, 0.3);
+}
+
+.stat-icon {
+    font-size: 2.5rem;
+    color: var(--purple-primary);
+    margin-bottom: var(--space-md);
+}
+
+.stat-number {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.stat-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.admin-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    height: 100%;
+}
+
+.card-header {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-primary);
+    padding: var(--space-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-title {
+    font-family: var(--font-display);
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    margin: 0;
+}
+
+.card-body {
+    padding: var(--space-lg);
+}
+
+.admin-table {
+    color: var(--text-primary);
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.admin-table th {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-family: var(--font-display);
+    font-weight: 600;
+    border: none;
+    padding: var(--space-md);
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 1px;
+}
+
+.admin-table td {
+    border-bottom: 1px solid var(--border-primary);
+    padding: var(--space-md);
+    vertical-align: middle;
+}
+
+.status-badge {
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-pending { background: rgba(255, 193, 7, 0.2); color: #ffc107; }
+.status-confirmed { background: rgba(0, 123, 255, 0.2); color: #007bff; }
+.status-shipped { background: rgba(40, 167, 69, 0.2); color: #28a745; }
+.status-delivered { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+.status-cancelled { background: rgba(220, 53, 69, 0.2); color: #dc3545; }
+
+.low-stock-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.low-stock-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--border-primary);
+}
+
+.low-stock-item:last-child {
+    border-bottom: none;
+}
+
+.product-info strong {
+    color: var(--text-primary);
+    display: block;
+}
+
+.product-info small {
+    display: block;
+    margin-top: 2px;
+}
+
+.stock-alert {
+    font-size: 1.2rem;
+}
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-lg);
+}
+
+.quick-action-btn {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-secondary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    text-decoration: none;
+    color: var(--text-primary);
+    text-align: center;
+    transition: var(--transition-fast);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.quick-action-btn:hover {
+    border-color: var(--purple-primary);
+    background: var(--purple-primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(157, 78, 221, 0.3);
+}
+
+.quick-action-btn i {
+    font-size: 1.5rem;
+}
+
+.quick-action-btn span {
+    font-family: var(--font-display);
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .admin-title {
+        font-size: 2rem;
+    }
+    
+    .card-header {
+        flex-direction: column;
+        gap: var(--space-md);
+        align-items: flex-start;
+    }
+    
+    .quick-actions {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+}
+</style>
+{% endblock %}

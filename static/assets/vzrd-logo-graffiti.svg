@@ -1,0 +1,54 @@
+<svg width="140" height="60" viewBox="0 0 140 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="glitch" x="-20%" y="-20%" width="140%" height="140%">
+      <feOffset in="SourceGraphic" dx="2" dy="0" result="r"/>
+      <feOffset in="SourceGraphic" dx="-2" dy="0" result="b"/>
+      <feComponentTransfer in="r" result="r2">
+        <feFuncR type="discrete" tableValues="1 0"/>
+        <feFuncG type="discrete" tableValues="0"/>
+        <feFuncB type="discrete" tableValues="0"/>
+      </feComponentTransfer>
+      <feComponentTransfer in="b" result="b2">
+        <feFuncR type="discrete" tableValues="0"/>
+        <feFuncG type="discrete" tableValues="0"/>
+        <feFuncB type="discrete" tableValues="1 0"/>
+      </feComponentTransfer>
+      <feBlend in="r2" in2="b2" mode="screen" result="blend"/>
+      <feBlend in="blend" in2="SourceGraphic" mode="multiply"/>
+    </filter>
+    <linearGradient id="graffitiFill" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#9D4EDD;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#3A86FF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9D4EDD;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background shadow/spray effect -->
+  <ellipse cx="70" cy="35" rx="65" ry="25" fill="url(#graffitiFill)" opacity="0.1" filter="url(#neonGlow)"/>
+  
+  <!-- Main VZRD text -->
+  <text x="70" y="38" text-anchor="middle" fill="url(#graffitiFill)" 
+        font-family="Permanent Marker, cursive" font-size="28" 
+        letter-spacing="4px" filter="url(#neonGlow)">VZRD</text>
+  
+  <!-- Glitch overlay -->
+  <text x="70" y="38" text-anchor="middle" fill="#ffffff" 
+        font-family="Permanent Marker, cursive" font-size="28" 
+        letter-spacing="4px" opacity="0.3" filter="url(#glitch)">VZRD</text>
+  
+  <!-- Japanese characters accent -->
+  <text x="25" y="20" fill="#3A86FF" font-family="Zen Tokyo Zoo, cursive" font-size="12" opacity="0.7">ス</text>
+  <text x="115" y="50" fill="#9D4EDD" font-family="Zen Tokyo Zoo, cursive" font-size="12" opacity="0.7">ト</text>
+  
+  <!-- Urban dots -->
+  <circle cx="15" cy="30" r="2" fill="#9D4EDD" opacity="0.6"/>
+  <circle cx="125" cy="30" r="2" fill="#3A86FF" opacity="0.6"/>
+  <circle cx="70" cy="15" r="1.5" fill="#ffffff" opacity="0.4"/>
+</svg>

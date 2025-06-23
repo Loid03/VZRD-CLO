@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - VZRD Premium Streetwear{% endblock %}
+
+{% block content %}
+<!-- Product Detail Header -->
+<section class="product-detail-header py-4 mt-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-6">
+                <a href="{{ url_for('produtos') }}" class="btn btn-outline-light btn-sm">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </a>
+            </div>
+            <div class="col-6 text-end">
+                <button class="btn btn-outline-light btn-sm" onclick="toggleCart()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Product Detail -->
+<section class="product-detail py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Product Image -->
+            <div class="col-lg-6 col-md-6 mb-4">
+                <div class="product-image-detail">
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}" class="img-fluid rounded-lg main-product-image" id="mainProductImage">
+                    {% if product.featured %}
+                    <span class="product-badge-detail">Novo</span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Product Info -->
+            <div class="col-lg-6 col-md-6">
+                <div class="product-info-detail">
+                    <h1 class="product-title">{{ product.name }}</h1>
+                    <p class="product-description-detail">{{ product.description }}</p>
+                    
+                    <!-- Price -->
+                    <div class="price-section mb-4">
+                        <div class="current-price">R$ {{ "%.2f"|format(product.price) }}</div>
+                        <div class="installments">ou 3x R$ {{ "%.2f"|format(product.price / 3) }} sem juros</div>
+                        <div class="payment-methods">
+                            <small class="text-muted">PIX, Cartão ou Boleto</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Size Selection -->
+                    <div class="size-selection mb-4">
+                        <label class="form-label">Tamanho:</label>
+                        <div class="size-options-detail">
+                            <input type="radio" class="btn-check" name="size" id="size-p" value="P" checked>
+                            <label class="btn btn-outline-primary size-btn" for="size-p">P</label>
+                            
+                            <input type="radio" class="btn-check" name="size" id="size-m" value="M">
+                            <label class="btn btn-outline-primary size-btn" for="size-m">M</label>
+                            
+                            <input type="radio" class="btn-check" name="size" id="size-g" value="G">
+                            <label class="btn btn-outline-primary size-btn" for="size-g">G</label>
+                            
+                            <input type="radio" class="btn-check" name="size" id="size-gg" value="GG">
+                            <label class="btn btn-outline-primary size-btn" for="size-gg">GG</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Quantity -->
+                    <div class="quantity-selection mb-4">
+                        <label class="form-label">Quantidade:</label>
+                        <div class="quantity-controls">
+                            <button type="button" class="btn btn-outline-secondary qty-btn" onclick="changeQuantity(-1)">-</button>
+                            <input type="number" class="form-control qty-input" id="quantity" value="1" min="1" max="10">
+                            <button type="button" class="btn btn-outline-secondary qty-btn" onclick="changeQuantity(1)">+</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button class="btn btn-primary btn-lg w-100 mb-3" onclick="addToCartDetail()">
+                            <i class="fas fa-shopping-cart"></i> Adicionar ao Carrinho
+                        </button>
+                        <button class="btn btn-success btn-lg w-100 mb-3" onclick="buyNowDetail()">
+                            <i class="fas fa-bolt"></i> Comprar Agora
+                        </button>
+                        <button class="btn btn-whatsapp btn-lg w-100" onclick="contactWhatsApp()">
+                            <i class="fab fa-whatsapp"></i> Falar no WhatsApp
+                        </button>
+                    </div>
+                    
+                    <!-- Product Features -->
+                    <div class="product-features mt-4">
+                        <h6>Características:</h6>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> 100% Algodão Premium</li>
+                            <li><i class="fas fa-check"></i> Corte Oversized</li>
+                            <li><i class="fas fa-check"></i> Estampa de Alta Qualidade</li>
+                            <li><i class="fas fa-check"></i> Resistente à Lavagem</li>
+                            <li><i class="fas fa-check"></i> Entrega Rápida</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Products -->
+<section class="related-products py-5" style="background: hsl(var(--surface));">
+    <div class="container">
+        <h3 class="text-center mb-5">Produtos Relacionados</h3>
+        <div class="row">
+            {% for related_product in related_products %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="product-card" onclick="goToProduct({{ related_product.id }})">
+                    <div class="product-image">
+                        <img src="{{ related_product.image_url }}" alt="{{ related_product.name }}" class="img-fluid">
+                    </div>
+                    <div class="product-info">
+                        <h6 class="product-name">{{ related_product.name }}</h6>
+                        <div class="product-price">R$ {{ "%.2f"|format(related_product.price) }}</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<script>
+// Product Detail Specific JavaScript
+const productData = {
+    id: {{ product.id }},
+    name: "{{ product.name }}",
+    price: {{ product.price }},
+    image: "{{ product.image_url }}"
+};
+
+function changeQuantity(delta) {
+    const qtyInput = document.getElementById('quantity');
+    let currentQty = parseInt(qtyInput.value);
+    let newQty = currentQty + delta;
+    
+    if (newQty < 1) newQty = 1;
+    if (newQty > 10) newQty = 10;
+    
+    qtyInput.value = newQty;
+}
+
+function getSelectedSize() {
+    const sizeRadios = document.querySelectorAll('input[name="size"]');
+    for (const radio of sizeRadios) {
+        if (radio.checked) {
+            return radio.value;
+        }
+    }
+    return 'M'; // default
+}
+
+function addToCartDetail() {
+    const quantity = parseInt(document.getElementById('quantity').value);
+    const size = getSelectedSize();
+    
+    addToCart(productData.id, productData.name, productData.price, productData.image, size, quantity);
+    showNotification('Produto adicionado ao carrinho!', 'success');
+    animateCartIcon();
+}
+
+function buyNowDetail() {
+    const quantity = parseInt(document.getElementById('quantity').value);
+    const size = getSelectedSize();
+    
+    // Add to cart first
+    addToCart(productData.id, productData.name, productData.price, productData.image, size, quantity);
+    
+    // Then redirect to checkout
+    setTimeout(() => {
+        window.location.href = '/checkout';
+    }, 500);
+}
+
+function contactWhatsApp() {
+    const quantity = parseInt(document.getElementById('quantity').value);
+    const size = getSelectedSize();
+    const message = `Olá! Tenho interesse no produto: ${productData.name} - Tamanho: ${size} - Quantidade: ${quantity}`;
+    const whatsappUrl = `https://wa.me/5511916292538?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+}
+
+function goToProduct(productId) {
+    window.location.href = `/produto/${productId}`;
+}
+
+// Touch enhancement for mobile
+document.addEventListener('DOMContentLoaded', function() {
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(button => {
+        button.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.98)';
+        }, { passive: true });
+        
+        button.addEventListener('touchend', function() {
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        }, { passive: true });
+    });
+});
+</script>
+{% endblock %}

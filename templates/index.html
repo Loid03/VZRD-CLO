@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block title %}VZRD - Premium Streetwear | Camisetas Oversized{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-background">
+        <img src="https://pixabay.com/get/gd6aa49c3c20271be0632dcd46e51aad9b5a577534341f64a0a6c94c31c688e1ac8d4ac22c450a813b293ed89c126302be3d7985e381cd9b2213d88a2f06135a7_1280.jpg" alt="Streetwear Fashion">
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="container">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-6">
+                <div class="hero-content">
+                    <h1 class="hero-title animate__animated animate__fadeInLeft">
+                        <span class="japanese-title">ストリート</span>
+                        <br><span class="brand-text">VZRD</span> STREETWEAR
+                    </h1>
+                    <div class="hero-typing animate__animated animate__fadeInLeft animate__delay-1s">
+                        <p class="typing-text">Vista o impossível. Torne-se VZRD.</p>
+                    </div>
+                    <p class="hero-subtitle animate__animated animate__fadeInLeft animate__delay-2s">
+                        Camisetas oversized premium com a essência do streetwear urbano. 
+                        Para quem não se contenta com o comum.
+                    </p>
+                    <div class="hero-actions animate__animated animate__fadeInUp animate__delay-3s">
+                        <a href="{{ url_for('produtos') }}" class="btn btn-primary btn-lg me-3 neon-btn">
+                            <i class="fas fa-shopping-bag"></i> Ver Coleção
+                        </a>
+                        <a href="{{ url_for('sobre') }}" class="btn btn-outline-primary btn-lg neon-btn-outline">
+                            <i class="fas fa-star"></i> Nossa História
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator">
+        <div class="scroll-arrow"></div>
+    </div>
+</section>
+
+<!-- New Collection Banner -->
+<section class="collection-banner">
+    <div class="container">
+        <div class="banner-content animate__animated animate__zoomIn">
+            <div class="banner-image">
+                <img src="https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                     alt="Neon Tokyo Street" class="banner-bg">
+                <div class="banner-overlay"></div>
+            </div>
+            <div class="banner-text">
+                <h2 class="banner-title">
+                    <span class="japanese-accent">新</span> Nova Coleção
+                </h2>
+                <p class="banner-subtitle">Já Disponível</p>
+                <a href="{{ url_for('produtos') }}" class="btn btn-neon">
+                    🏮 Explorar Agora
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section id="featured" class="featured-section py-5">
+    <div class="container">
+        <div class="section-header text-center mb-5">
+            <h2 class="section-title">Lançamentos</h2>
+            <p class="section-subtitle">As peças mais quentes da temporada</p>
+        </div>
+        
+        <div class="row">
+            {% for product in featured_products %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="product-card" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+                    <div class="product-image">
+                        <img src="{{ product.image }}" alt="{{ product.name }}" class="img-fluid">
+                        <div class="product-overlay">
+                            <button class="btn btn-primary btn-quick-view" onclick="addToCart({{ product.id }}, '{{ product.name }}', {{ product.price }}, '{{ product.image }}')">
+                                <i class="fas fa-shopping-cart"></i> Adicionar
+                            </button>
+                            <button class="btn btn-outline-light" onclick="buyNow({{ product.id }}, '{{ product.name }}', {{ product.price }})">
+                                <i class="fab fa-whatsapp"></i> Comprar
+                            </button>
+                        </div>
+                        {% if product.featured %}
+                        <span class="product-badge">Novo</span>
+                        {% endif %}
+                    </div>
+                    <div class="product-info">
+                        <h5 class="product-name">{{ product.name }}</h5>
+                        <p class="product-description">{{ product.description }}</p>
+                        <div class="product-price">R$ {{ "%.2f"|format(product.price) }}</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{{ url_for('produtos') }}" class="btn btn-outline-primary btn-lg">
+                Ver Todos os Produtos
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="about-section py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <div class="about-image">
+                    <img src="https://pixabay.com/get/g78118f1ae7eec5b8dba8534161b071c4ae61f08855b3488c042ea84c6d59dc6e72d1be077636f9a01079ac87aefc102849f17bb5966a0a5dd205896ccc08739a_1280.jpg" alt="Urban Lifestyle" class="img-fluid rounded">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="about-content">
+                    <h2 class="about-title">Streetwear que Define Atitude</h2>
+                    <p class="about-text">
+                        A VZRD nasceu da paixão pela cultura urbana e pelo streetwear autêntico. 
+                        Cada peça é pensada para quem não tem medo de se expressar e busca 
+                        qualidade premium em cada detalhe.
+                    </p>
+                    <div class="about-features">
+                        <div class="feature-item">
+                            <i class="fas fa-tshirt"></i>
+                            <div>
+                                <h6>Qualidade Premium</h6>
+                                <p>Materiais selecionados e acabamento perfeito</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-palette"></i>
+                            <div>
+                                <h6>Design Exclusivo</h6>
+                                <p>Criações únicas inspiradas na cultura urbana</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-shipping-fast"></i>
+                            <div>
+                                <h6>Entrega Rápida</h6>
+                                <p>Receba em casa com segurança e agilidade</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Urban Lifestyle -->
+<section class="lifestyle-section py-5">
+    <div class="container">
+        <div class="section-header text-center mb-5">
+            <h2 class="section-title">Lifestyle Urbano</h2>
+            <p class="section-subtitle">Viva a cultura da rua com estilo</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="lifestyle-card">
+                    <img src="https://pixabay.com/get/gf0bc503dc5e19e18f6f1a01bd10a2dcf4bc6ce053a9c5ff5b0b0f5c5db9a7447dfd849f138e8bda00868089888308ba0cc54db3f22a9395c4ca8242000a4387b_1280.jpg" alt="Urban Style" class="img-fluid">
+                    <div class="lifestyle-overlay">
+                        <h5>Estilo Urbano</h5>
+                        <p>Autenticidade em cada look</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="lifestyle-card">
+                    <img src="https://pixabay.com/get/g8f59eba9fcc5dbb56bf4f06e81083d548dd042a8349cb5b7fee6858a7c06df6f26369b8573e5f331df0b2f00a5ac2e9f8aa68c5f70f6a91e92dee5e1246c381c_1280.jpg" alt="Street Culture" class="img-fluid">
+                    <div class="lifestyle-overlay">
+                        <h5>Cultura de Rua</h5>
+                        <p>Conecte-se com o movimento</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="lifestyle-card">
+                    <img src="https://pixabay.com/get/ge0a59452f155b0a93259278d52625dfe832f11abc80fae0b5d6c1c4389880ecde9b2ed869799bff6e15879093d819ac7a037fe903ee04bc4d94b5245b0a7edc3_1280.jpg" alt="Urban Fashion" class="img-fluid">
+                    <div class="lifestyle-overlay">
+                        <h5>Moda Urbana</h5>
+                        <p>Expressão através do vestuário</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section py-5">
+    <div class="container">
+        <div class="cta-content text-center">
+            <h2 class="cta-title">Pronto para Elevar Seu Estilo?</h2>
+            <p class="cta-subtitle">
+                Descubra a coleção completa VZRD e encontre a peça perfeita para seu look urbano
+            </p>
+            <a href="{{ url_for('produtos') }}" class="btn btn-primary btn-lg">
+                Explorar Coleção
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<!-- AOS Animation Library -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<script>
+    // Initialize AOS
+    AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true
+    });
+    
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+
+{% block title %}Meu Perfil - VZRD{% endblock %}
+
+{% block content %}
+<section class="profile-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="profile-card animate__animated animate__fadeInUp">
+                    <div class="profile-header">
+                        <h2 class="profile-title">
+                            <span class="japanese-accent">プロフィール</span>
+                            <br>Meu Perfil
+                        </h2>
+                        <p class="profile-subtitle">Atualize suas informações pessoais</p>
+                    </div>
+                    
+                    <form method="POST" class="profile-form">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.first_name.label(class="form-label") }}
+                                    {{ form.first_name(class="form-control profile-input") }}
+                                    {% if form.first_name.errors %}
+                                        <div class="form-errors">
+                                            {% for error in form.first_name.errors %}
+                                                <small class="error-text">{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.last_name.label(class="form-label") }}
+                                    {{ form.last_name(class="form-control profile-input") }}
+                                    {% if form.last_name.errors %}
+                                        <div class="form-errors">
+                                            {% for error in form.last_name.errors %}
+                                                <small class="error-text">{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form.phone.label(class="form-label") }}
+                            {{ form.phone(class="form-control profile-input", placeholder="(11) 99999-9999") }}
+                            {% if form.phone.errors %}
+                                <div class="form-errors">
+                                    {% for error in form.phone.errors %}
+                                        <small class="error-text">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form.address.label(class="form-label") }}
+                            {{ form.address(class="form-control profile-input", rows="3") }}
+                            {% if form.address.errors %}
+                                <div class="form-errors">
+                                    {% for error in form.address.errors %}
+                                        <small class="error-text">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.city.label(class="form-label") }}
+                                    {{ form.city(class="form-control profile-input") }}
+                                    {% if form.city.errors %}
+                                        <div class="form-errors">
+                                            {% for error in form.city.errors %}
+                                                <small class="error-text">{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    {{ form.state.label(class="form-label") }}
+                                    {{ form.state(class="form-control profile-input") }}
+                                    {% if form.state.errors %}
+                                        <div class="form-errors">
+                                            {% for error in form.state.errors %}
+                                                <small class="error-text">{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    {{ form.zipcode.label(class="form-label") }}
+                                    {{ form.zipcode(class="form-control profile-input") }}
+                                    {% if form.zipcode.errors %}
+                                        <div class="form-errors">
+                                            {% for error in form.zipcode.errors %}
+                                                <small class="error-text">{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary profile-btn w-100">
+                            <i class="fas fa-save"></i> Salvar Alterações
+                        </button>
+                    </form>
+                    
+                    <div class="profile-info">
+                        <h4>Informações da Conta</h4>
+                        <div class="info-item">
+                            <span class="info-label">Usuário:</span>
+                            <span class="info-value">{{ current_user.username }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">E-mail:</span>
+                            <span class="info-value">{{ current_user.email }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Membro desde:</span>
+                            <span class="info-value">{{ current_user.created_at.strftime('%d/%m/%Y') }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.profile-section {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    display: flex;
+    align-items: center;
+    padding: var(--space-2xl) 0;
+    position: relative;
+}
+
+.profile-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(157, 78, 221, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(58, 134, 255, 0.08) 0%, transparent 50%);
+    opacity: 0.7;
+}
+
+.profile-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-xl);
+    padding: var(--space-2xl);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 10;
+}
+
+.profile-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(157, 78, 221, 0.05), 
+        rgba(58, 134, 255, 0.05));
+    border-radius: var(--radius-xl);
+    z-index: -1;
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+}
+
+.profile-title {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: var(--text-primary);
+    margin-bottom: var(--space-md);
+    text-shadow: 0 0 20px var(--purple-glow);
+}
+
+.japanese-accent {
+    font-family: var(--font-japanese);
+    color: var(--blue-neon);
+    font-size: 1.2rem;
+    text-shadow: 0 0 15px var(--blue-glow);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.profile-subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin: 0;
+}
+
+.profile-form {
+    margin-bottom: var(--space-xl);
+}
+
+.form-group {
+    margin-bottom: var(--space-lg);
+}
+
+.form-label {
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+    display: block;
+    font-family: var(--font-display);
+}
+
+.profile-input {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-secondary);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    padding: var(--space-md);
+    font-size: 1rem;
+    transition: var(--transition-fast);
+}
+
+.profile-input:focus {
+    border-color: var(--purple-primary);
+    box-shadow: 0 0 0 0.2rem rgba(157, 78, 221, 0.25);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.profile-btn {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: var(--space-md) var(--space-xl);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-xl);
+}
+
+.profile-info {
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--border-primary);
+}
+
+.profile-info h4 {
+    color: var(--text-primary);
+    font-family: var(--font-display);
+    margin-bottom: var(--space-lg);
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--border-primary);
+}
+
+.info-label {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.info-value {
+    color: var(--text-secondary);
+}
+
+.form-errors {
+    margin-top: var(--space-sm);
+}
+
+.error-text {
+    color: #ef4444;
+    font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+    .profile-card {
+        margin: var(--space-lg);
+        padding: var(--space-xl);
+    }
+    
+    .profile-title {
+        font-size: 1.5rem;
+    }
+}
+</style>
+{% endblock %}

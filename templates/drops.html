@@ -1,0 +1,557 @@
+{% extends "base.html" %}
+
+{% block title %}Drops Exclusivos - VZRD{% endblock %}
+
+{% block content %}
+<div class="drops-container">
+    <!-- Hero Section -->
+    <div class="drops-hero animate__animated animate__fadeInDown">
+        <div class="container">
+            <div class="text-center">
+                <h1 class="drops-title glitch japanese-text" data-text="PRÓXIMOS DROPS">PRÓXIMOS DROPS</h1>
+                <p class="drops-subtitle">Coleções limitadas que vão fazer você se destacar na multidão</p>
+            </div>
+        </div>
+        
+        <!-- Particles Background -->
+        <div class="particles-container">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+    </div>
+    
+    <!-- Countdown Section -->
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="countdown-card animate__animated animate__fadeInUp">
+                    <div class="card-header text-center">
+                        <h2 class="japanese-text">🏮 COLEÇÃO TOKYO NIGHTS 2.0</h2>
+                        <p>Edição ultra limitada - Apenas 100 unidades</p>
+                    </div>
+                    
+                    <div class="countdown-timer" id="countdown">
+                        <div class="time-unit">
+                            <span class="time-value" id="days">00</span>
+                            <span class="time-label">Dias</span>
+                        </div>
+                        <div class="time-separator">:</div>
+                        <div class="time-unit">
+                            <span class="time-value" id="hours">00</span>
+                            <span class="time-label">Horas</span>
+                        </div>
+                        <div class="time-separator">:</div>
+                        <div class="time-unit">
+                            <span class="time-value" id="minutes">00</span>
+                            <span class="time-label">Min</span>
+                        </div>
+                        <div class="time-separator">:</div>
+                        <div class="time-unit">
+                            <span class="time-value" id="seconds">00</span>
+                            <span class="time-label">Seg</span>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button class="btn btn-primary btn-lg notify-btn" onclick="notifyMe()">
+                            <i class="fas fa-bell me-2"></i>
+                            Me Avisar do Lançamento
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Preview Grid -->
+    <div class="container mt-5">
+        <h3 class="text-center mb-5 section-title">Preview da Coleção</h3>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="preview-card animate__animated animate__fadeInUp" style="animation-delay: 0.1s">
+                    <div class="preview-image">
+                        <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Preview 1" class="img-fluid">
+                        <div class="preview-overlay">
+                            <div class="coming-soon">EM BREVE</div>
+                        </div>
+                    </div>
+                    <div class="preview-info">
+                        <h5>VZRD Neo Tokyo</h5>
+                        <p>Design futurista com elementos holográficos</p>
+                        <span class="preview-price">R$ 149,90</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="preview-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
+                    <div class="preview-image">
+                        <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Preview 2" class="img-fluid">
+                        <div class="preview-overlay">
+                            <div class="coming-soon">EM BREVE</div>
+                        </div>
+                    </div>
+                    <div class="preview-info">
+                        <h5>Cyber Samurai</h5>
+                        <p>Mistura tradição japonesa com tecnologia</p>
+                        <span class="preview-price">R$ 159,90</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="preview-card animate__animated animate__fadeInUp" style="animation-delay: 0.3s">
+                    <div class="preview-image">
+                        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Preview 3" class="img-fluid">
+                        <div class="preview-overlay">
+                            <div class="coming-soon">EM BREVE</div>
+                        </div>
+                    </div>
+                    <div class="preview-info">
+                        <h5>Neon Dreams V2</h5>
+                        <p>Cores vibrantes que brilham no escuro</p>
+                        <span class="preview-price">R$ 139,90</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Previous Drops -->
+    <div class="container mt-5">
+        <h3 class="text-center mb-5 section-title">Drops Anteriores</h3>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="previous-drop-card">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="https://images.unsplash.com/photo-1503341504253-dff4815485f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Drop Anterior" class="img-fluid h-100 object-cover">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5>Street Samurai Collection</h5>
+                                <p class="text-muted">Lançado em Maio 2025</p>
+                                <p>Soldado em 48 horas! Nossa coleção mais rápida até hoje.</p>
+                                <span class="badge sold-out-badge">ESGOTADO</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="previous-drop-card">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="https://images.unsplash.com/photo-1562157873-818bc0726f68?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Drop Anterior" class="img-fluid h-100 object-cover">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5>Urban Zen Series</h5>
+                                <p class="text-muted">Lançado em Abril 2025</p>
+                                <p>Minimalismo japonês que conquistou os otakus.</p>
+                                <span class="badge sold-out-badge">ESGOTADO</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Newsletter Section -->
+    <div class="container mt-5 mb-5">
+        <div class="newsletter-section text-center">
+            <h3 class="japanese-text">🎌 Seja o Primeiro a Saber</h3>
+            <p>Inscreva-se para receber notificações dos próximos drops</p>
+            <form class="newsletter-form" onsubmit="subscribeNewsletter(event)">
+                <div class="input-group">
+                    <input type="email" class="form-control" placeholder="Seu melhor e-mail" required>
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-paper-plane"></i>
+                        Inscrever
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.drops-container {
+    min-height: 100vh;
+    position: relative;
+}
+
+.drops-hero {
+    background: linear-gradient(135deg, rgba(157, 78, 221, 0.2), rgba(58, 134, 255, 0.2));
+    padding: 100px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.drops-title {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.drops-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.particles-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+    box-shadow: 0 0 10px var(--primary-color);
+}
+
+.particle:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 5s; }
+.particle:nth-child(2) { left: 20%; animation-delay: 1s; animation-duration: 7s; }
+.particle:nth-child(3) { left: 40%; animation-delay: 2s; animation-duration: 6s; }
+.particle:nth-child(4) { left: 60%; animation-delay: 3s; animation-duration: 8s; }
+.particle:nth-child(5) { left: 80%; animation-delay: 4s; animation-duration: 5s; }
+.particle:nth-child(6) { left: 90%; animation-delay: 5s; animation-duration: 7s; }
+
+@keyframes float {
+    0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10%, 90% { opacity: 1; }
+    50% { transform: translateY(-100vh) rotate(180deg); }
+}
+
+.countdown-card {
+    background: var(--card-bg);
+    border: 2px solid var(--primary-color);
+    border-radius: var(--border-radius);
+    padding: 3rem;
+    box-shadow: var(--neon-glow);
+    backdrop-filter: blur(10px);
+}
+
+.card-header h2 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.countdown-timer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 3rem 0;
+    flex-wrap: wrap;
+}
+
+.time-unit {
+    text-align: center;
+}
+
+.time-value {
+    display: block;
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-shadow: var(--neon-glow);
+    font-family: 'Permanent Marker', cursive;
+    min-width: 80px;
+}
+
+.time-label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.time-separator {
+    font-size: 2rem;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.notify-btn {
+    min-width: 250px;
+    font-size: 1.1rem;
+    animation: pulse 2s infinite;
+}
+
+.preview-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    border: 1px solid rgba(157, 78, 221, 0.2);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.preview-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--neon-glow);
+    border-color: var(--primary-color);
+}
+
+.preview-image {
+    position: relative;
+    overflow: hidden;
+}
+
+.preview-image img {
+    transition: transform 0.3s ease;
+    height: 250px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.preview-card:hover .preview-image img {
+    transform: scale(1.1);
+}
+
+.preview-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.coming-soon {
+    background: var(--gradient-primary);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    animation: pulse 2s infinite;
+}
+
+.preview-info {
+    padding: 1.5rem;
+}
+
+.preview-info h5 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.preview-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--secondary-color);
+}
+
+.previous-drop-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(157, 78, 221, 0.1);
+    overflow: hidden;
+    height: 100%;
+}
+
+.sold-out-badge {
+    background: linear-gradient(45deg, #ff4757, #ff6b7a);
+    color: white;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.newsletter-section {
+    background: var(--card-bg);
+    padding: 3rem;
+    border-radius: var(--border-radius);
+    border: 2px solid var(--primary-color);
+    box-shadow: var(--neon-glow);
+}
+
+.newsletter-form {
+    max-width: 400px;
+    margin: 2rem auto 0;
+}
+
+.newsletter-form .form-control {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--primary-color);
+    color: var(--text-light);
+}
+
+.newsletter-form .form-control:focus {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--primary-color);
+    box-shadow: var(--neon-glow);
+    color: var(--text-light);
+}
+
+.section-title {
+    color: var(--primary-color);
+    font-family: 'Permanent Marker', cursive;
+    text-shadow: var(--neon-glow);
+}
+
+.object-cover {
+    object-fit: cover;
+}
+
+@media (max-width: 768px) {
+    .drops-title {
+        font-size: 2.5rem;
+    }
+    
+    .time-value {
+        font-size: 2rem;
+        min-width: 60px;
+    }
+    
+    .countdown-timer {
+        gap: 0.5rem;
+    }
+    
+    .time-separator {
+        font-size: 1.5rem;
+    }
+    
+    .countdown-card {
+        padding: 2rem 1rem;
+    }
+}
+</style>
+
+<script>
+// Countdown Timer
+function initCountdown() {
+    // Set drop date (exemplo: 30 dias a partir de agora)
+    const dropDate = new Date();
+    dropDate.setDate(dropDate.getDate() + 30);
+    dropDate.setHours(12, 0, 0, 0); // Meio-dia
+    
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = dropDate.getTime() - now;
+        
+        if (distance > 0) {
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        } else {
+            // Drop aconteceu
+            document.getElementById('countdown').innerHTML = '<h2 class="text-center">🚀 DROP LIBERADO!</h2>';
+        }
+    }
+    
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+}
+
+function notifyMe() {
+    // Simular inscrição para notificação
+    if ('Notification' in window) {
+        if (Notification.permission === 'granted') {
+            showSuccessMessage();
+        } else if (Notification.permission !== 'denied') {
+            Notification.requestPermission().then(function (permission) {
+                if (permission === 'granted') {
+                    showSuccessMessage();
+                }
+            });
+        } else {
+            showSuccessMessage();
+        }
+    } else {
+        showSuccessMessage();
+    }
+}
+
+function showSuccessMessage() {
+    const notification = document.createElement('div');
+    notification.className = 'alert alert-success';
+    notification.textContent = '🔔 Perfeito! Você será notificado quando o drop estiver disponível!';
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        animation: slideIn 0.3s ease;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 3000);
+}
+
+function subscribeNewsletter(event) {
+    event.preventDefault();
+    const email = event.target.querySelector('input[type="email"]').value;
+    
+    // Simular inscrição
+    fetch('/subscribe-newsletter', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: email })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showSuccessMessage();
+            event.target.reset();
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Erro ao inscrever. Tente novamente.');
+    });
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    initCountdown();
+    
+    // Add animation classes
+    const elements = document.querySelectorAll('.animate__animated');
+    elements.forEach((el, index) => {
+        setTimeout(() => {
+            el.classList.add('animate__fadeInUp');
+        }, index * 100);
+    });
+});
+</script>
+{% endblock %}

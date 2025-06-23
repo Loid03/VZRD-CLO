@@ -1,0 +1,84 @@
+Atualize o projeto VZRD e-commerce com as seguintes instruções detalhadas. O objetivo é transformar a plataforma em uma experiência visual e funcional completa, com estética anime + graffiti japonês, recursos modernos e automações inteligentes:
+
+🔮 VISUAL E ESTÉTICA (ESTILO ANIME + STREETWEAR URBANO)
+
+1. Fontes:
+   - Headers: "Permanent Marker"
+   - Elementos com japonês: "Zen Tokyo Zoo"
+   - Textos gerais: "Inter" ou "Poppins"
+
+2. Paleta de cores:
+   - Fundo principal: #111111
+   - Roxo neon: #9D4EDD
+   - Azul neon: #3A86FF
+   - Efeitos gradientes com linear-gradient e partículas leves (se possível)
+
+3. Logo:
+   - Substitua pela imagem mais recente com estilo spray/graffiti (imagem enviada)
+   - Aplique efeito de glitch neon leve com CSS ou SVG
+
+4. Layout:
+   - Cards de produtos com hover neon
+   - Menu com ícones japoneses: 🈶 Produtos, 🏮 Coleção, 👤 Conta, 🛒 Carrinho, 📮 Contato
+   - Botões com efeitos sweep (animação de brilho passando)
+
+5. Animações:
+   - Integre Animate.css
+   - Elementos devem entrar com efeito fadeInUp ou slideIn
+
+---
+
+⚙️ FUNCIONALIDADES BACKEND
+
+1. Twilio:
+   - Instale e configure o Twilio com `python-dotenv`
+   - Enviar SMS para o admin quando um pedido for realizado
+   - Enviar SMS de confirmação ao cliente (caso número informado)
+   - Armazene no `.env`:  
+     TWILIO_SID=  
+     TWILIO_AUTH_TOKEN=  
+     TWILIO_PHONE=  
+     ADMIN_PHONE=+5511916292538
+
+2. Página de Produto:
+   - Criar rota /produto/<id>
+   - Mostrar imagem grande, descrição completa, tamanhos disponíveis, botão “Adicionar ao carrinho”
+   - Coração para favoritos (usuário logado pode favoritar)
+
+3. Sistema de reviews:
+   - Usuários logados podem avaliar com 1–5 estrelas e comentar
+   - Mostrar média de avaliação e número de comentários
+
+4. Página /drops:
+   - Página com lançamentos limitados (ex: coleção especial)
+   - Contador regressivo (JS) até o lançamento
+   - Fundo com glitch ou partículas roxas
+
+5. Painel administrativo:
+   - Mostrar métricas rápidas: total de pedidos, mais vendidos, usuários
+   - Possibilidade de mudar status do pedido (Pendente → Enviado → Entregue)
+   - Upload de novos produtos direto do painel
+
+---
+
+💡 IDEIAS FUTURAS (adicione como TODO no código ou doc):
+
+- Mascote VZRD estilo anime (guia interativo)
+- Trailer em vídeo estilo opening de anime
+- Página de história da marca (com storytelling visual)
+- Chatbot com IA (atendimento divertido estilo otaku)
+
+---
+
+📄 Atualize o README.md:
+- Instruções para rodar o projeto
+- Credenciais de login de teste (admin@vzrd.com / vzrd123, user@vzrd.com / 123456)
+- Lista de funcionalidades
+- Créditos de fontes/imagens (se usar externas)
+
+---
+
+🎯 Quando tudo estiver concluído, exiba no terminal:
+
+✅ VZRD evoluído para versão *Otaku Graffiti 2.0*. Pronto para dominar as ruas.
+

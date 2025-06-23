@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}Pedido Confirmado - VZRD{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="success-card">
+                <div class="text-center mb-4">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2 class="text-success">Pedido Confirmado!</h2>
+                    <p class="lead">Obrigado por escolher a VZRD. Seu pedido foi recebido com sucesso.</p>
+                </div>
+
+                <div class="order-details-card">
+                    <h4>Detalhes do Pedido</h4>
+                    <div class="order-info">
+                        <div class="order-row">
+                            <span class="order-label">Número do Pedido:</span>
+                            <span class="order-value">#{{ order.id }}</span>
+                        </div>
+                        <div class="order-row">
+                            <span class="order-label">Total:</span>
+                            <span class="order-value">R$ {{ "%.2f"|format(order.total_amount) }}</span>
+                        </div>
+                        <div class="order-row">
+                            <span class="order-label">Status:</span>
+                            <span class="badge bg-warning">{{ order.status.title() }}</span>
+                        </div>
+                        <div class="order-row">
+                            <span class="order-label">Data do Pedido:</span>
+                            <span class="order-value">{{ order.created_at[:10] if order.created_at else 'N/A' }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                {% if order.items %}
+                <div class="order-items-card">
+                    <h5>Itens do Pedido</h5>
+                    {% for item in order.items %}
+                    <div class="order-item">
+                        <div class="item-info">
+                            <span class="item-name">{{ item.product.name if item.product else 'Produto' }}</span>
+                            <span class="item-details">Tamanho: {{ item.size }} | Quantidade: {{ item.quantity }}</span>
+                        </div>
+                        <span class="item-price">R$ {{ "%.2f"|format(item.unit_price * item.quantity) }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="next-steps">
+                    <h5>Próximos Passos</h5>
+                    <ul class="steps-list">
+                        <li>Você receberá um e-mail de confirmação em breve</li>
+                        <li>Seu pedido será processado em até 24 horas</li>
+                        <li>Enviaremos atualizações sobre o status do envio</li>
+                        <li>O prazo de entrega é de 3-7 dias úteis</li>
+                    </ul>
+                </div>
+
+                <div class="action-buttons text-center">
+                    <a href="{{ url_for('produtos') }}" class="btn btn-primary">
+                        <i class="fas fa-shopping-bag"></i> Continuar Comprando
+                    </a>
+                    <a href="{{ url_for('index') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-home"></i> Voltar ao Início
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.success-card {
+    background: var(--surface);
+    border-radius: var(--radius-xl);
+    padding: var(--space-2xl);
+    border: 1px solid var(--border);
+}
+
+.success-icon {
+    font-size: 4rem;
+    color: #28a745;
+    margin-bottom: var(--space-lg);
+}
+
+.order-details-card, .order-items-card {
+    background: var(--background);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+    border: 1px solid var(--border);
+}
+
+.order-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.order-row:last-child {
+    border-bottom: none;
+}
+
+.order-label {
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.order-value {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-md) 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.order-item:last-child {
+    border-bottom: none;
+}
+
+.item-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.item-name {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.item-details {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.item-price {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.next-steps {
+    margin-bottom: var(--space-xl);
+}
+
+.steps-list {
+    list-style: none;
+    padding: 0;
+}
+
+.steps-list li {
+    padding: var(--space-sm) 0;
+    position: relative;
+    padding-left: var(--space-lg);
+}
+
+.steps-list li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #28a745;
+    font-weight: bold;
+}
+
+.action-buttons {
+    gap: var(--space-md);
+}
+
+.action-buttons .btn {
+    margin: 0 var(--space-sm);
+}
+</style>
+{% endblock %}

@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+
+{% block title %}Produtos - VZRD Premium Streetwear{% endblock %}
+
+{% block content %}
+<!-- Products Header -->
+<section class="products-header py-5 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-header text-center">
+                    <h1 class="page-title">Nossa Coleção</h1>
+                    <p class="page-subtitle">Camisetas oversized premium com o melhor do streetwear</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Filters -->
+<section class="filters-section py-3">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="filters-group">
+                    <button class="filter-btn active" onclick="filterProducts('all')">Todos</button>
+                    <button class="filter-btn" onclick="filterProducts('featured')">Lançamentos</button>
+                    <button class="filter-btn" onclick="filterProducts('price-low')">Menor Preço</button>
+                    <button class="filter-btn" onclick="filterProducts('price-high')">Maior Preço</button>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="search-box">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Buscar produtos..." id="searchInput" onkeyup="searchProducts()">
+                        <button class="btn btn-outline-secondary" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Products Grid -->
+<section class="products-grid py-5">
+    <div class="container">
+        <div class="row" id="productsContainer">
+            {% for product in products %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4 product-item" 
+                 data-featured="{{ product.featured|lower }}" 
+                 data-price="{{ product.price }}"
+                 data-name="{{ product.name|lower }}">
+                <div class="product-card" onclick="goToProductDetail({{ product.id }})">
+                    <div class="product-image">
+                        <img src="{{ product.image_url }}" alt="{{ product.name }}" class="img-fluid">
+                        <div class="product-overlay">
+                            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); addToCart({{ product.id }}, '{{ product.name }}', {{ product.price }}, '{{ product.image_url }}')">
+                                <i class="fas fa-shopping-cart"></i>
+                            </button>
+                            <button class="btn btn-outline-light btn-sm" onclick="event.stopPropagation(); buyNow({{ product.id }}, '{{ product.name }}', {{ product.price }})">
+                                <i class="fab fa-whatsapp"></i>
+                            </button>
+                            <button class="btn btn-outline-light btn-sm" onclick="event.stopPropagation(); goToProductDetail({{ product.id }})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        {% if product.featured %}
+                        <span class="product-badge">Novo</span>
+                        {% endif %}
+                        <div class="product-actions-mobile d-lg-none">
+                            <button class="btn btn-outline-primary btn-sm w-100 mb-2" onclick="event.stopPropagation(); goToProductDetail({{ product.id }})">
+                                <i class="fas fa-eye"></i> Ver Detalhes
+                            </button>
+                            <button class="btn btn-primary btn-sm w-100 mb-2" onclick="event.stopPropagation(); addToCart({{ product.id }}, '{{ product.name }}', {{ product.price }}, '{{ product.image_url }}')">
+                                <i class="fas fa-shopping-cart"></i> Adicionar
+                            </button>
+                            <button class="btn btn-success btn-sm w-100" onclick="event.stopPropagation(); buyNow({{ product.id }}, '{{ product.name }}', {{ product.price }})">
+                                <i class="fab fa-whatsapp"></i> Comprar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-info" onclick="goToProductDetail({{ product.id }})">
+                        <h6 class="product-name">{{ product.name }}</h6>
+                        <p class="product-description">{{ product.description }}</p>
+                        <div class="product-price-container">
+                            <span class="product-price">R$ {{ "%.2f"|format(product.price) }}</span>
+                            <small class="product-installments">ou 3x R$ {{ "%.2f"|format(product.price / 3) }}</small>
+                        </div>
+                        <div class="product-sizes">
+                            <span class="size-label">Tamanhos:</span>
+                            <div class="size-options">
+                                <span class="size-option">P</span>
+                                <span class="size-option">M</span>
+                                <span class="size-option">G</span>
+                                <span class="size-option">GG</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- No Results -->
+        <div id="noResults" class="text-center py-5" style="display: none;">
+            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+            <h4>Nenhum produto encontrado</h4>
+            <p class="text-muted">Tente ajustar seus filtros ou termos de busca</p>
+        </div>
+    </div>
+</section>
+
+<!-- Product Quick View Modal -->
+<div class="modal fade" id="quickViewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Visualização Rápida</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <img id="quickViewImage" src="" alt="" class="img-fluid rounded">
+                    </div>
+                    <div class="col-md-6">
+                        <h4 id="quickViewName"></h4>
+                        <p id="quickViewDescription" class="text-muted"></p>
+                        <div class="price-section mb-3">
+                            <span class="h4 text-primary" id="quickViewPrice"></span>
+                            <small class="text-muted d-block" id="quickViewInstallments"></small>
+                        </div>
+                        <div class="size-selection mb-3">
+                            <label class="form-label">Tamanho:</label>
+                            <div class="size-selector">
+                                <input type="radio" class="btn-check" name="quickViewSize" id="sizeP" value="P">
+                                <label class="btn btn-outline-secondary" for="sizeP">P</label>
+                                
+                                <input type="radio" class="btn-check" name="quickViewSize" id="sizeM" value="M" checked>
+                                <label class="btn btn-outline-secondary" for="sizeM">M</label>
+                                
+                                <input type="radio" class="btn-check" name="quickViewSize" id="sizeG" value="G">
+                                <label class="btn btn-outline-secondary" for="sizeG">G</label>
+                                
+                                <input type="radio" class="btn-check" name="quickViewSize" id="sizeGG" value="GG">
+                                <label class="btn btn-outline-secondary" for="sizeGG">GG</label>
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn btn-primary btn-lg w-100 mb-2" onclick="addToCartFromModal()">
+                                <i class="fas fa-shopping-cart"></i> Adicionar ao Carrinho
+                            </button>
+                            <button class="btn btn-success btn-lg w-100" onclick="buyNowFromModal()">
+                                <i class="fab fa-whatsapp"></i> Comprar via WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+let currentQuickViewProduct = null;
+
+// Filter products
+function filterProducts(type) {
+    const products = document.querySelectorAll('.product-item');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    
+    // Update active filter button
+    filterBtns.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    products.forEach(product => {
+        const featured = product.dataset.featured === 'true';
+        const price = parseFloat(product.dataset.price);
+        
+        switch(type) {
+            case 'all':
+                product.style.display = 'block';
+                break;
+            case 'featured':
+                product.style.display = featured ? 'block' : 'none';
+                break;
+            case 'price-low':
+                // Sort by price (low to high)
+                product.style.display = 'block';
+                break;
+            case 'price-high':
+                // Sort by price (high to low)
+                product.style.display = 'block';
+                break;
+        }
+    });
+    
+    // Sort products if needed
+    if (type === 'price-low' || type === 'price-high') {
+        sortProductsByPrice(type === 'price-low');
+    }
+    
+    checkNoResults();
+}
+
+// Sort products by price
+function sortProductsByPrice(ascending = true) {
+    const container = document.getElementById('productsContainer');
+    const products = Array.from(container.querySelectorAll('.product-item'));
+    
+    products.sort((a, b) => {
+        const priceA = parseFloat(a.dataset.price);
+        const priceB = parseFloat(b.dataset.price);
+        return ascending ? priceA - priceB : priceB - priceA;
+    });
+    
+    // Reorder DOM elements
+    products.forEach(product => container.appendChild(product));
+}
+
+// Search products
+function searchProducts() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const products = document.querySelectorAll('.product-item');
+    
+    products.forEach(product => {
+        const productName = product.dataset.name;
+        const isVisible = productName.includes(searchTerm);
+        product.style.display = isVisible ? 'block' : 'none';
+    });
+    
+    checkNoResults();
+}
+
+// Check if no results should be shown
+function checkNoResults() {
+    const visibleProducts = document.querySelectorAll('.product-item[style*="block"], .product-item:not([style*="none"])');
+    const noResults = document.getElementById('noResults');
+    
+    if (visibleProducts.length === 0) {
+        noResults.style.display = 'block';
+    } else {
+        noResults.style.display = 'none';
+    }
+}
+
+// Quick view product
+function quickView(productId) {
+    // Find product data (in real app, this would be an API call)
+    const products = {{ products | tojson }};
+    const product = products.find(p => p.id === productId);
+    
+    if (product) {
+        currentQuickViewProduct = product;
+        
+        document.getElementById('quickViewImage').src = product.image;
+        document.getElementById('quickViewImage').alt = product.name;
+        document.getElementById('quickViewName').textContent = product.name;
+        document.getElementById('quickViewDescription').textContent = product.description;
+        document.getElementById('quickViewPrice').textContent = `R$ ${product.price.toFixed(2)}`;
+        document.getElementById('quickViewInstallments').textContent = `ou 3x R$ ${(product.price / 3).toFixed(2)}`;
+        
+        const modal = new bootstrap.Modal(document.getElementById('quickViewModal'));
+        modal.show();
+    }
+}
+
+// Add to cart from modal
+function addToCartFromModal() {
+    if (currentQuickViewProduct) {
+        const size = document.querySelector('input[name="quickViewSize"]:checked').value;
+        addToCart(currentQuickViewProduct.id, currentQuickViewProduct.name, currentQuickViewProduct.price, currentQuickViewProduct.image, size);
+        
+        const modal = bootstrap.Modal.getInstance(document.getElementById('quickViewModal'));
+        modal.hide();
+    }
+}
+
+// Buy now from modal
+function buyNowFromModal() {
+    if (currentQuickViewProduct) {
+        const size = document.querySelector('input[name="quickViewSize"]:checked').value;
+        buyNow(currentQuickViewProduct.id, currentQuickViewProduct.name, currentQuickViewProduct.price, size);
+        
+        const modal = bootstrap.Modal.getInstance(document.getElementById('quickViewModal'));
+        modal.hide();
+    }
+}
+</script>
+{% endblock %}

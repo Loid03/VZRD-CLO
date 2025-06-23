@@ -1,0 +1,173 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Contatos - Admin VZRD{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Mensagens de Contato</h2>
+    <div class="btn-group">
+        <button class="btn btn-outline-primary" onclick="exportContacts()">
+            <i class="fas fa-download me-2"></i>Exportar
+        </button>
+        <button class="btn btn-outline-danger" onclick="clearOldContacts()">
+            <i class="fas fa-trash me-2"></i>Limpar Antigas
+        </button>
+    </div>
+</div>
+
+<div class="admin-card p-4">
+    <div class="table-responsive">
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Assunto</th>
+                    <th>Mensagem</th>
+                    <th>Data</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contact in contacts %}
+                <tr>
+                    <td>{{ contact.id }}</td>
+                    <td>{{ contact.name }}</td>
+                    <td>
+                        <a href="mailto:{{ contact.email }}" class="text-primary">
+                            {{ contact.email }}
+                        </a>
+                    </td>
+                    <td>
+                        {% if contact.subject %}
+                            <span class="badge bg-info">{{ contact.subject }}</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Sem assunto</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            {{ contact.message }}
+                        </div>
+                    </td>
+                    <td>{{ contact.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-primary" onclick="viewContact({{ contact.id }})" data-bs-toggle="modal" data-bs-target="#contactModal">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <a href="mailto:{{ contact.email }}" class="btn btn-outline-success">
+                                <i class="fas fa-reply"></i>
+                            </a>
+                            <button class="btn btn-outline-danger" onclick="deleteContact({{ contact.id }})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Statistics -->
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="admin-card p-3 text-center">
+            <h5>{{ contacts|length }}</h5>
+            <small class="text-muted">Total de Mensagens</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="admin-card p-3 text-center">
+            <h5>{{ contacts|selectattr('created_at')|selectattr('created_at', 'ge', moment().subtract(7, 'days'))|list|length }}</h5>
+            <small class="text-muted">Esta Semana</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="admin-card p-3 text-center">
+            <h5>{{ contacts|map(attribute='subject')|select|list|length }}</h5>
+            <small class="text-muted">Com Assunto</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="admin-card p-3 text-center">
+            <h5>{{ contacts|map(attribute='email')|unique|list|length }}</h5>
+            <small class="text-muted">Emails Únicos</small>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Detail Modal -->
+<div class="modal fade" id="contactModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalhes da Mensagem</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="contactDetails">
+                <!-- Contact details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-success" id="replyButton">
+                    <i class="fas fa-reply me-2"></i>Responder por Email
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const contacts = {{ contacts|tojson }};
+
+function viewContact(id) {
+    const contact = contacts.find(c => c.id === id);
+    if (contact) {
+        document.getElementById('contactDetails').innerHTML = `
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Nome:</strong> ${contact.name}<br>
+                    <strong>Email:</strong> ${contact.email}<br>
+                    <strong>Assunto:</strong> ${contact.subject || 'Não informado'}<br>
+                    <strong>Data:</strong> ${new Date(contact.created_at).toLocaleString('pt-BR')}
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-12">
+                    <strong>Mensagem:</strong><br>
+                    <div class="p-3 bg-secondary rounded mt-2" style="white-space: pre-wrap;">${contact.message}</div>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('replyButton').onclick = function() {
+            window.location.href = `mailto:${contact.email}?subject=Re: ${contact.subject || 'Contato VZRD'}`;
+        };
+    }
+}
+
+function deleteContact(id) {
+    if (confirm('Tem certeza que deseja excluir esta mensagem?')) {
+        // Implementation for deleting contacts
+        alert('Exclusão de contatos será implementada em breve');
+    }
+}
+
+function exportContacts() {
+    // Implementation for exporting contacts
+    alert('Exportação será implementada em breve');
+}
+
+function clearOldContacts() {
+    if (confirm('Tem certeza que deseja excluir mensagens com mais de 30 dias?')) {
+        // Implementation for clearing old contacts
+        alert('Limpeza automática será implementada em breve');
+    }
+}
+</script>
+{% endblock %}

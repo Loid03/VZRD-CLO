@@ -1,0 +1,344 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if status == 'success' %}
+Pagamento Aprovado - VZRD
+{% elif status == 'pending' %}
+Pagamento Pendente - VZRD
+{% else %}
+Pagamento Recusado - VZRD
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<section class="payment-result-section py-5 mt-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="payment-result-card text-center">
+                    {% if status == 'success' %}
+                        <div class="result-icon success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h2 class="result-title">Pagamento Aprovado!</h2>
+                        <p class="result-message">
+                            Seu pedido foi confirmado e será processado em breve. 
+                            Você receberá um e-mail com os detalhes da compra.
+                        </p>
+                        <div class="next-steps">
+                            <h5>Próximos Passos:</h5>
+                            <ul class="steps-list">
+                                <li>Preparação do pedido: 1-2 dias úteis</li>
+                                <li>Envio: 5-10 dias úteis</li>
+                                <li>Você receberá o código de rastreamento por e-mail</li>
+                            </ul>
+                        </div>
+                    {% elif status == 'pending' %}
+                        <div class="result-icon pending">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h2 class="result-title">Pagamento Pendente</h2>
+                        <p class="result-message">
+                            Seu pagamento está sendo processado. Você receberá uma confirmação por e-mail assim que for aprovado.
+                        </p>
+                        <div class="next-steps">
+                            <h5>O que fazer agora:</h5>
+                            <ul class="steps-list">
+                                <li>Se pagou por PIX, a confirmação é automática</li>
+                                <li>Se pagou por boleto, aguarde a compensação (até 3 dias úteis)</li>
+                                <li>Acompanhe seu e-mail para atualizações</li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <div class="result-icon failure">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <h2 class="result-title">Pagamento Não Aprovado</h2>
+                        <p class="result-message">
+                            Houve um problema com seu pagamento. Não se preocupe, você pode tentar novamente.
+                        </p>
+                        <div class="next-steps">
+                            <h5>Possíveis soluções:</h5>
+                            <ul class="steps-list">
+                                <li>Verifique os dados do cartão</li>
+                                <li>Confirme se há limite disponível</li>
+                                <li>Tente outro método de pagamento</li>
+                                <li>Entre em contato conosco se o problema persistir</li>
+                            </ul>
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Order Details -->
+                    <div class="order-details">
+                        <h5>Detalhes do Pedido</h5>
+                        <div class="order-info">
+                            <div class="order-row">
+                                <span class="order-label">Número do Pedido:</span>
+                                <span class="order-value">#{{ order.id }}</span>
+                            </div>
+                            <div class="order-row">
+                                <span class="order-label">Total:</span>
+                                <span class="order-value">R$ {{ "%.2f"|format(order.total_amount) }}</span>
+                            </div>
+                            <div class="order-row">
+                                <span class="order-label">Data:</span>
+                                <span class="order-value">{{ order.created_at.strftime('%d/%m/%Y às %H:%M') }}</span>
+                            </div>
+                            <div class="order-row">
+                                <span class="order-label">Status:</span>
+                                <span class="order-value">
+                                    {% if order.payment_status == 'approved' %}
+                                        <span class="badge bg-success">Pago</span>
+                                    {% elif order.payment_status == 'pending' %}
+                                        <span class="badge bg-warning">Pendente</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Recusado</span>
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        {% if status == 'success' or status == 'pending' %}
+                            <a href="https://wa.me/5511916292538?text=Olá! Gostaria de acompanhar meu pedido #{{ order.id }}" 
+                               class="btn btn-success btn-lg me-3" target="_blank">
+                                <i class="fab fa-whatsapp"></i> Acompanhar Pedido
+                            </a>
+                        {% else %}
+                            <a href="{{ url_for('checkout') }}" class="btn btn-primary btn-lg me-3">
+                                <i class="fas fa-redo"></i> Tentar Novamente
+                            </a>
+                        {% endif %}
+                        
+                        <a href="{{ url_for('produtos') }}" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-shopping-bag"></i> Continuar Comprando
+                        </a>
+                    </div>
+                    
+                    <!-- Support Contact -->
+                    <div class="support-section">
+                        <p class="support-text">
+                            Precisa de ajuda? Entre em contato conosco:
+                        </p>
+                        <div class="support-contacts">
+                            <a href="https://wa.me/5511916292538" class="support-link" target="_blank">
+                                <i class="fab fa-whatsapp"></i> WhatsApp
+                            </a>
+                            <a href="mailto:VZRD@gmail.com" class="support-link">
+                                <i class="fas fa-envelope"></i> E-mail
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Clear cart if payment was successful
+    {% if status == 'success' %}
+        localStorage.removeItem('vzrd_cart');
+        updateCartCount();
+    {% endif %}
+    
+    // Track conversion event
+    {% if status == 'success' %}
+        trackEvent('ecommerce', 'purchase', 'order_{{ order.id }}', {{ order.total_amount }});
+    {% endif %}
+});
+</script>
+
+<style>
+.payment-result-section {
+    background: var(--gradient-dark);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.payment-result-card {
+    background: hsl(var(--surface));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius-xl);
+    padding: var(--space-3xl);
+    box-shadow: var(--shadow-xl);
+}
+
+.result-icon {
+    font-size: 4rem;
+    margin-bottom: var(--space-xl);
+}
+
+.result-icon.success {
+    color: hsl(var(--success));
+}
+
+.result-icon.pending {
+    color: hsl(var(--warning));
+}
+
+.result-icon.failure {
+    color: hsl(var(--danger));
+}
+
+.result-title {
+    font-family: var(--font-display);
+    color: hsl(var(--text-primary));
+    margin-bottom: var(--space-lg);
+    text-transform: uppercase;
+}
+
+.result-message {
+    color: hsl(var(--text-secondary));
+    font-size: 1.125rem;
+    margin-bottom: var(--space-xl);
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.next-steps {
+    background: rgba(139, 92, 246, 0.05);
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-xl);
+    text-align: left;
+}
+
+.next-steps h5 {
+    color: hsl(var(--primary));
+    margin-bottom: var(--space-md);
+    font-family: var(--font-street);
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.steps-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.steps-list li {
+    padding: var(--space-sm) 0;
+    color: hsl(var(--text-secondary));
+    position: relative;
+    padding-left: var(--space-lg);
+}
+
+.steps-list li::before {
+    content: '•';
+    color: hsl(var(--primary));
+    font-size: 1.2rem;
+    position: absolute;
+    left: 0;
+}
+
+.order-details {
+    background: hsl(var(--background));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-xl);
+}
+
+.order-details h5 {
+    color: hsl(var(--primary));
+    margin-bottom: var(--space-lg);
+    font-family: var(--font-street);
+    text-transform: uppercase;
+}
+
+.order-info {
+    text-align: left;
+}
+
+.order-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid hsl(var(--border));
+}
+
+.order-row:last-child {
+    border-bottom: none;
+}
+
+.order-label {
+    color: hsl(var(--text-secondary));
+    font-weight: var(--font-weight-medium);
+}
+
+.order-value {
+    color: hsl(var(--text-primary));
+    font-weight: var(--font-weight-semibold);
+}
+
+.action-buttons {
+    margin-bottom: var(--space-xl);
+}
+
+.action-buttons .btn {
+    margin-bottom: var(--space-md);
+}
+
+.support-section {
+    padding-top: var(--space-xl);
+    border-top: 1px solid hsl(var(--border));
+}
+
+.support-text {
+    color: hsl(var(--text-secondary));
+    margin-bottom: var(--space-md);
+}
+
+.support-contacts {
+    display: flex;
+    gap: var(--space-lg);
+    justify-content: center;
+}
+
+.support-link {
+    color: hsl(var(--primary));
+    text-decoration: none;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid hsl(var(--primary));
+    border-radius: var(--radius-md);
+    transition: var(--transition-fast);
+}
+
+.support-link:hover {
+    background: hsl(var(--primary));
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .payment-result-card {
+        padding: var(--space-xl);
+    }
+    
+    .action-buttons .btn {
+        width: 100%;
+        margin-bottom: var(--space-md);
+    }
+    
+    .support-contacts {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .support-link {
+        width: 200px;
+        text-align: center;
+    }
+}
+</style>
+{% endblock %}

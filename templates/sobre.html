@@ -1,0 +1,375 @@
+{% extends "base.html" %}
+
+{% block title %}Sobre a VZRD - Nossa História{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-about">
+    <div class="container">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-6 animate-on-scroll">
+                <h1 class="hero-title mb-4">
+                    Nossa <span class="text-gradient">História</span>
+                </h1>
+                <p class="hero-subtitle mb-4">
+                    Nascemos das ruas, crescemos com atitude. VZRD é mais que uma marca - é um movimento.
+                </p>
+                <div class="typing-container">
+                    <p class="typing-text-large">
+                        "Vista o impossível. Torne-se VZRD."
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-6 animate-on-scroll delay-2">
+                <div class="about-image-container">
+                    <img src="https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                         alt="VZRD Urban Night Vibe" class="about-hero-image">
+                    <div class="image-overlay"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Story Section -->
+<section class="story-section section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="story-content">
+                    <div class="story-block animate-on-scroll">
+                        <h2 class="story-title">Como Tudo Começou</h2>
+                        <p class="story-text">
+                            Em 2023, nas ruas de São Paulo, nasceu a VZRD. Cansados do básico, criamos algo único. 
+                            Oversized não era só um corte - era uma declaração. Cada peça conta uma história, 
+                            cada design quebra um padrão.
+                        </p>
+                    </div>
+
+                    <div class="story-block animate-on-scroll delay-1">
+                        <h3 class="story-subtitle">A Vibe Urbana</h3>
+                        <p class="story-text">
+                            Inspirados pela cultura anime, pelo neon das noites urbanas e pela liberdade do streetwear, 
+                            criamos peças que falam com quem vive intensamente. VZRD é para quem não se contenta 
+                            com o comum.
+                        </p>
+                    </div>
+
+                    <div class="story-block animate-on-scroll delay-2">
+                        <h3 class="story-subtitle">Qualidade Premium</h3>
+                        <p class="story-text">
+                            Cada camiseta é pensada nos mínimos detalhes. Tecidos de alta qualidade, 
+                            cortes precisos e estampas exclusivas. Porque quem veste VZRD merece o melhor.
+                        </p>
+                    </div>
+
+                    <div class="story-block animate-on-scroll delay-3">
+                        <h3 class="story-subtitle">O Futuro É Agora</h3>
+                        <p class="story-text">
+                            Estamos apenas começando. VZRD vai além da moda - estamos construindo uma comunidade 
+                            de pessoas que pensam diferente, que ousam, que transformam.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Values Section -->
+<section class="values-section section bg-gradient">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="section-title text-white">Nossos Valores</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="value-card animate-on-scroll">
+                    <div class="value-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h4 class="value-title">Atitude</h4>
+                    <p class="value-text">
+                        Cada peça carrega a energia das ruas. VZRD é para quem tem personalidade.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="value-card animate-on-scroll delay-1">
+                    <div class="value-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4 class="value-title">Qualidade</h4>
+                    <p class="value-text">
+                        Premium em cada detalhe. Tecidos selecionados, acabamento impecável.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="value-card animate-on-scroll delay-2">
+                    <div class="value-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4 class="value-title">Comunidade</h4>
+                    <p class="value-text">
+                        Mais que clientes, somos uma família que compartilha a mesma vibe.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="cta-title animate-on-scroll">Faça Parte da História</h2>
+                <p class="cta-subtitle animate-on-scroll delay-1">
+                    Vista VZRD. Seja único. Transforme o mundo ao seu redor.
+                </p>
+                <div class="cta-buttons animate-on-scroll delay-2">
+                    <a href="{{ url_for('produtos') }}" class="btn btn-primary btn-lg me-3">
+                        <i class="fas fa-shopping-bag"></i> Ver Coleção
+                    </a>
+                    <a href="{{ url_for('contato') }}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-envelope"></i> Fale Conosco
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.hero-about {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-about::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23ffffff" stroke-width="0.1" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    opacity: 0.3;
+}
+
+.about-image-container {
+    position: relative;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+}
+
+.about-hero-image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: var(--radius-xl);
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(139, 95, 214, 0.3), rgba(167, 139, 250, 0.2));
+    border-radius: var(--radius-xl);
+}
+
+.typing-container {
+    margin-top: var(--space-xl);
+}
+
+.typing-text-large {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--purple-secondary);
+    overflow: hidden;
+    border-right: 2px solid var(--purple-primary);
+    white-space: nowrap;
+    margin: 0;
+    animation: typing 4s steps(30, end), blink 1s step-end infinite;
+}
+
+.story-section {
+    background: var(--bg-secondary);
+}
+
+.story-content {
+    position: relative;
+}
+
+.story-block {
+    margin-bottom: var(--space-2xl);
+    padding: var(--space-xl);
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    position: relative;
+}
+
+.story-block::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(135deg, var(--purple-primary), var(--purple-secondary));
+    border-radius: 2px;
+}
+
+.story-title {
+    color: var(--text-primary);
+    font-family: var(--font-display);
+    font-size: 2rem;
+    margin-bottom: var(--space-lg);
+}
+
+.story-subtitle {
+    color: var(--purple-secondary);
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    margin-bottom: var(--space-md);
+}
+
+.story-text {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin: 0;
+}
+
+.values-section {
+    background: linear-gradient(135deg, var(--purple-primary), var(--purple-secondary));
+    position: relative;
+}
+
+.value-card {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    text-align: center;
+    backdrop-filter: blur(10px);
+    transition: var(--transition-normal);
+}
+
+.value-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.value-icon {
+    font-size: 2.5rem;
+    color: white;
+    margin-bottom: var(--space-lg);
+}
+
+.value-title {
+    color: white;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    margin-bottom: var(--space-md);
+}
+
+.value-text {
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.cta-section {
+    background: var(--bg-primary);
+}
+
+.cta-title {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    color: var(--text-primary);
+    margin-bottom: var(--space-lg);
+}
+
+.cta-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xl);
+}
+
+.cta-buttons {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .typing-text-large {
+        font-size: 1.25rem;
+    }
+    
+    .story-title {
+        font-size: 1.5rem;
+    }
+    
+    .cta-title {
+        font-size: 2rem;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .cta-buttons .btn {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Enhanced typing effect for about page
+document.addEventListener('DOMContentLoaded', function() {
+    const typingElement = document.querySelector('.typing-text-large');
+    if (typingElement) {
+        const text = typingElement.textContent;
+        typingElement.textContent = '';
+        typingElement.style.borderRight = '2px solid var(--purple-primary)';
+        
+        let i = 0;
+        function typeWriter() {
+            if (i < text.length) {
+                typingElement.textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            } else {
+                // Blinking cursor effect
+                setInterval(function() {
+                    typingElement.style.borderRight = typingElement.style.borderRight === 'none' ? 
+                        '2px solid var(--purple-primary)' : 'none';
+                }, 500);
+            }
+        }
+        
+        // Start typing after a short delay
+        setTimeout(typeWriter, 1000);
+    }
+});
+</script>
+{% endblock %}

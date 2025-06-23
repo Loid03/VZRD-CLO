@@ -1,0 +1,524 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - VZRD{% endblock %}
+
+{% block content %}
+<section class="product-detail-section">
+    <div class="container">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb-nav animate__animated animate__fadeInDown">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Início</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('produtos') }}">Produtos</a></li>
+                <li class="breadcrumb-item active">{{ product.name }}</li>
+            </ol>
+        </nav>
+        
+        <div class="row">
+            <!-- Product Image -->
+            <div class="col-lg-6 mb-4">
+                <div class="product-image-container animate__animated animate__fadeInLeft">
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-main-image">
+                    {% if product.featured %}
+                    <div class="product-featured-badge">
+                        <span class="japanese-text">特集</span>
+                        Destaque
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Product Info -->
+            <div class="col-lg-6">
+                <div class="product-info animate__animated animate__fadeInRight">
+                    <div class="product-header">
+                        <h1 class="product-title">{{ product.name }}</h1>
+                        <div class="product-price">
+                            R$ {{ "%.2f"|format(product.price) }}
+                            <span class="price-currency">BRL</span>
+                        </div>
+                    </div>
+                    
+                    <div class="product-description">
+                        <h3 class="section-subtitle">Descrição</h3>
+                        <p>{{ product.description }}</p>
+                    </div>
+                    
+                    <div class="product-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Categoria:</span>
+                            <span class="detail-value">{{ product.category.title() }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Estoque:</span>
+                            <span class="detail-value">
+                                {% if product.stock_quantity > 0 %}
+                                    {{ product.stock_quantity }} unidades
+                                {% else %}
+                                    Esgotado
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Size Selection -->
+                    <div class="size-selection">
+                        <h3 class="section-subtitle">Tamanho</h3>
+                        <div class="size-options">
+                            {% set sizes = product.size_options.split(',') %}
+                            {% for size in sizes %}
+                            <button class="size-btn" data-size="{{ size.strip() }}">
+                                {{ size.strip() }}
+                            </button>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Quantity Selection -->
+                    <div class="quantity-selection">
+                        <h3 class="section-subtitle">Quantidade</h3>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="changeQuantity(-1)">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="number" id="quantity" value="1" min="1" max="{{ product.stock_quantity }}" readonly>
+                            <button class="quantity-btn" onclick="changeQuantity(1)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="product-actions">
+                        <button class="btn btn-primary btn-lg add-to-cart-btn" 
+                                onclick="addToCartWithSize()"
+                                {% if product.stock_quantity == 0 %}disabled{% endif %}>
+                            <i class="fas fa-shopping-cart"></i> 
+                            {% if product.stock_quantity > 0 %}
+                                Adicionar ao Carrinho
+                            {% else %}
+                                Produto Esgotado
+                            {% endif %}
+                        </button>
+                        
+                        {% if current_user.is_authenticated %}
+                        <button class="btn btn-outline-primary favorite-btn" 
+                                onclick="toggleFavorite({{ product.id }}, this)"
+                                data-favorited="{{ is_favorited|lower }}">
+                            <i class="fas fa-heart{% if not is_favorited %}-o{% endif %}"></i>
+                            {% if is_favorited %}Remover dos Favoritos{% else %}Adicionar aos Favoritos{% endif %}
+                        </button>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Product Features -->
+                    <div class="product-features">
+                        <div class="feature-item">
+                            <i class="fas fa-truck"></i>
+                            <span>Frete grátis para todo o Brasil</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Troca gratuita em até 30 dias</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Compra 100% segura</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Related Products -->
+        {% if related_products %}
+        <section class="related-products">
+            <div class="section-header text-center">
+                <h2 class="section-title">
+                    <span class="japanese-accent">関連</span>
+                    Produtos Relacionados
+                </h2>
+            </div>
+            
+            <div class="row">
+                {% for related in related_products %}
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="product-card animate__animated animate__fadeInUp" style="animation-delay: {{ loop.index0 * 0.1 }}s">
+                        <div class="product-image">
+                            <img src="{{ related.image_url }}" alt="{{ related.name }}" class="product-img">
+                            <div class="product-overlay">
+                                <a href="{{ url_for('product_detail', product_id=related.id) }}" class="btn btn-outline-light btn-sm">
+                                    <i class="fas fa-eye"></i> Ver
+                                </a>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h5 class="product-name">{{ related.name }}</h5>
+                            <div class="product-price">R$ {{ "%.2f"|format(related.price) }}</div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+.product-detail-section {
+    padding: var(--space-2xl) 0;
+    background: var(--bg-primary);
+    min-height: 80vh;
+}
+
+.breadcrumb-nav {
+    margin-bottom: var(--space-xl);
+}
+
+.breadcrumb {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    margin: 0;
+}
+
+.breadcrumb-item a {
+    color: var(--purple-secondary);
+    text-decoration: none;
+}
+
+.breadcrumb-item.active {
+    color: var(--text-secondary);
+}
+
+.product-image-container {
+    position: relative;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    background: var(--bg-card);
+    padding: var(--space-lg);
+}
+
+.product-main-image {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+}
+
+.product-featured-badge {
+    position: absolute;
+    top: var(--space-lg);
+    left: var(--space-lg);
+    background: linear-gradient(135deg, var(--purple-primary), var(--blue-neon));
+    color: white;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    font-family: var(--font-display);
+    font-weight: 600;
+    box-shadow: 0 0 20px rgba(157, 78, 221, 0.5);
+}
+
+.japanese-text {
+    font-family: var(--font-japanese);
+    margin-right: var(--space-sm);
+}
+
+.product-info {
+    padding: var(--space-lg) 0;
+}
+
+.product-header {
+    margin-bottom: var(--space-xl);
+}
+
+.product-title {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    color: var(--text-primary);
+    margin-bottom: var(--space-md);
+    text-shadow: 0 0 20px var(--purple-glow);
+}
+
+.product-price {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--purple-primary), var(--blue-neon));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 15px var(--purple-glow));
+}
+
+.price-currency {
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin-left: var(--space-sm);
+}
+
+.product-description,
+.product-details,
+.size-selection,
+.quantity-selection {
+    margin-bottom: var(--space-xl);
+}
+
+.section-subtitle {
+    font-family: var(--font-display);
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    margin-bottom: var(--space-md);
+}
+
+.product-description p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--border-primary);
+}
+
+.detail-label {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.detail-value {
+    color: var(--text-secondary);
+}
+
+.size-options {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.size-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border-secondary);
+    color: var(--text-primary);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    min-width: 50px;
+}
+
+.size-btn:hover,
+.size-btn.active {
+    background: var(--purple-primary);
+    border-color: var(--purple-primary);
+    color: white;
+    box-shadow: 0 0 15px rgba(157, 78, 221, 0.4);
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.quantity-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border-secondary);
+    color: var(--text-primary);
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.quantity-btn:hover {
+    background: var(--purple-primary);
+    border-color: var(--purple-primary);
+    color: white;
+}
+
+#quantity {
+    background: var(--bg-card);
+    border: 1px solid var(--border-secondary);
+    color: var(--text-primary);
+    text-align: center;
+    width: 80px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+}
+
+.product-actions {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+    flex-wrap: wrap;
+}
+
+.add-to-cart-btn {
+    flex: 2;
+    min-width: 250px;
+}
+
+.favorite-btn {
+    flex: 1;
+    min-width: 200px;
+}
+
+.product-features {
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-sm) 0;
+    color: var(--text-secondary);
+}
+
+.feature-item i {
+    color: var(--purple-secondary);
+    font-size: 1.2rem;
+}
+
+.related-products {
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-2xl);
+    border-top: 1px solid var(--border-primary);
+}
+
+.japanese-accent {
+    font-family: var(--font-japanese);
+    color: var(--blue-neon);
+    font-size: 1.2rem;
+    text-shadow: 0 0 15px var(--blue-glow);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .product-title {
+        font-size: 2rem;
+    }
+    
+    .product-price {
+        font-size: 1.5rem;
+    }
+    
+    .product-actions {
+        flex-direction: column;
+    }
+    
+    .add-to-cart-btn,
+    .favorite-btn {
+        flex: none;
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .size-options {
+        justify-content: center;
+    }
+}
+</style>
+
+<script>
+let selectedSize = '';
+
+// Size selection
+document.querySelectorAll('.size-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        selectedSize = this.dataset.size;
+    });
+});
+
+// Quantity controls
+function changeQuantity(delta) {
+    const quantityInput = document.getElementById('quantity');
+    const currentQuantity = parseInt(quantityInput.value);
+    const maxQuantity = parseInt(quantityInput.max);
+    const newQuantity = Math.max(1, Math.min(maxQuantity, currentQuantity + delta));
+    quantityInput.value = newQuantity;
+}
+
+// Add to cart with size and quantity
+function addToCartWithSize() {
+    if (!selectedSize) {
+        showNotification('Por favor, selecione um tamanho', 'warning');
+        return;
+    }
+    
+    const quantity = parseInt(document.getElementById('quantity').value);
+    const productId = {{ product.id }};
+    const productName = '{{ product.name }}';
+    const productPrice = {{ product.price }};
+    const productImage = '{{ product.image_url }}';
+    
+    // Add each quantity as separate items with size
+    for (let i = 0; i < quantity; i++) {
+        addToCart(productId, productName, productPrice, productImage, selectedSize);
+    }
+    
+    showNotification(`${quantity}x {{ product.name }} (${selectedSize}) adicionado ao carrinho!`, 'success');
+}
+
+// Toggle favorite
+async function toggleFavorite(productId, button) {
+    try {
+        const response = await fetch('/api/toggle-favorite', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ product_id: productId })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            const icon = button.querySelector('i');
+            const text = button.childNodes[button.childNodes.length - 1];
+            
+            if (data.is_favorited) {
+                icon.className = 'fas fa-heart';
+                text.textContent = 'Remover dos Favoritos';
+                button.dataset.favorited = 'true';
+            } else {
+                icon.className = 'fas fa-heart-o';
+                text.textContent = 'Adicionar aos Favoritos';
+                button.dataset.favorited = 'false';
+            }
+            
+            showNotification(data.message, 'success');
+        } else {
+            showNotification(data.message, 'error');
+        }
+    } catch (error) {
+        console.error('Error toggling favorite:', error);
+        showNotification('Erro ao atualizar favoritos', 'error');
+    }
+}
+
+// Auto-select first size
+document.addEventListener('DOMContentLoaded', function() {
+    const firstSizeBtn = document.querySelector('.size-btn');
+    if (firstSizeBtn) {
+        firstSizeBtn.click();
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin - VZRD{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <style>
+        .admin-sidebar {
+            background: var(--gradient-dark);
+            min-height: 100vh;
+            border-right: 1px solid hsl(var(--border));
+        }
+        
+        .admin-nav-link {
+            color: hsl(var(--text-secondary));
+            padding: 0.75rem 1rem;
+            display: block;
+            text-decoration: none;
+            transition: var(--transition-fast);
+        }
+        
+        .admin-nav-link:hover {
+            color: hsl(var(--primary));
+            background: hsl(var(--surface));
+        }
+        
+        .admin-nav-link.active {
+            color: white;
+            background: var(--gradient-primary);
+        }
+        
+        .admin-content {
+            background: hsl(var(--background));
+            min-height: 100vh;
+        }
+        
+        .admin-card {
+            background: hsl(var(--surface));
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius-lg);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 px-0 admin-sidebar">
+                <div class="p-3">
+                    <h5 class="text-center mb-4">
+                        <span class="brand-text">VZRD</span> Admin
+                    </h5>
+                    
+                    <nav class="nav flex-column">
+                        <a href="{{ url_for('admin_orders') }}" class="admin-nav-link">
+                            <i class="fas fa-shopping-cart me-2"></i> Pedidos
+                        </a>
+                        <a href="{{ url_for('admin_products') }}" class="admin-nav-link">
+                            <i class="fas fa-tshirt me-2"></i> Produtos
+                        </a>
+                        <a href="{{ url_for('admin_contacts') }}" class="admin-nav-link">
+                            <i class="fas fa-envelope me-2"></i> Contatos
+                        </a>
+                        <a href="{{ url_for('admin_newsletter') }}" class="admin-nav-link">
+                            <i class="fas fa-users me-2"></i> Newsletter
+                        </a>
+                        <hr class="my-3">
+                        <a href="{{ url_for('index') }}" class="admin-nav-link">
+                            <i class="fas fa-home me-2"></i> Voltar ao Site
+                        </a>
+                    </nav>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 admin-content">
+                <div class="p-4">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

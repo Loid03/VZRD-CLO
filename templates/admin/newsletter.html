@@ -1,0 +1,185 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Newsletter - Admin VZRD{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Assinantes da Newsletter</h2>
+    <div class="btn-group">
+        <button class="btn btn-outline-success" onclick="exportSubscribers()">
+            <i class="fas fa-download me-2"></i>Exportar Lista
+        </button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sendNewsletterModal">
+            <i class="fas fa-envelope me-2"></i>Enviar Newsletter
+        </button>
+    </div>
+</div>
+
+<div class="admin-card p-4">
+    <div class="table-responsive">
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Data de Inscrição</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subscriber in subscribers %}
+                <tr>
+                    <td>{{ subscriber.id }}</td>
+                    <td>{{ subscriber.email }}</td>
+                    <td>{{ subscriber.subscribed_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>
+                        {% if subscriber.active %}
+                            <span class="badge bg-success">Ativo</span>
+                        {% else %}
+                            <span class="badge bg-danger">Inativo</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            {% if subscriber.active %}
+                                <button class="btn btn-outline-warning" onclick="deactivateSubscriber({{ subscriber.id }})">
+                                    <i class="fas fa-pause"></i>
+                                </button>
+                            {% else %}
+                                <button class="btn btn-outline-success" onclick="activateSubscriber({{ subscriber.id }})">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                            {% endif %}
+                            <button class="btn btn-outline-danger" onclick="deleteSubscriber({{ subscriber.id }})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Statistics -->
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="admin-card p-3 text-center">
+            <h5>{{ subscribers|length }}</h5>
+            <small class="text-muted">Total de Assinantes</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="admin-card p-3 text-center">
+            <h5>{{ subscribers|selectattr('active')|list|length }}</h5>
+            <small class="text-muted">Assinantes Ativos</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="admin-card p-3 text-center">
+            <h5>{{ subscribers|rejectattr('active')|list|length }}</h5>
+            <small class="text-muted">Assinantes Inativos</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="admin-card p-3 text-center">
+            <h5>{{ ((subscribers|selectattr('active')|list|length / subscribers|length * 100) if subscribers|length > 0 else 0)|round|int }}%</h5>
+            <small class="text-muted">Taxa de Atividade</small>
+        </div>
+    </div>
+</div>
+
+<!-- Send Newsletter Modal -->
+<div class="modal fade" id="sendNewsletterModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h5 class="modal-title">Enviar Newsletter</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="newsletterForm">
+                    <div class="mb-3">
+                        <label class="form-label">Assunto</label>
+                        <input type="text" class="form-control" name="subject" placeholder="Ex: Novos lançamentos VZRD" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Conteúdo da Newsletter</label>
+                        <textarea class="form-control" name="content" rows="10" placeholder="Digite o conteúdo da newsletter aqui..." required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="sendToActive" checked>
+                            <label class="form-check-label" for="sendToActive">
+                                Enviar apenas para assinantes ativos ({{ subscribers|selectattr('active')|list|length }} pessoas)
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="sendNewsletter()">
+                    <i class="fas fa-paper-plane me-2"></i>Enviar Newsletter
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function activateSubscriber(id) {
+    // Implementation for activating subscribers
+    alert('Ativação de assinantes será implementada em breve');
+}
+
+function deactivateSubscriber(id) {
+    if (confirm('Tem certeza que deseja desativar este assinante?')) {
+        // Implementation for deactivating subscribers
+        alert('Desativação de assinantes será implementada em breve');
+    }
+}
+
+function deleteSubscriber(id) {
+    if (confirm('Tem certeza que deseja excluir este assinante permanentemente?')) {
+        // Implementation for deleting subscribers
+        alert('Exclusão de assinantes será implementada em breve');
+    }
+}
+
+function exportSubscribers() {
+    // Implementation for exporting subscriber list
+    const subscribers = {{ subscribers|tojson }};
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += "ID,Email,Data de Inscrição,Status\n";
+    
+    subscribers.forEach(function(subscriber) {
+        const row = [
+            subscriber.id,
+            subscriber.email,
+            subscriber.subscribed_at,
+            subscriber.active ? 'Ativo' : 'Inativo'
+        ].join(",");
+        csvContent += row + "\n";
+    });
+    
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "vzrd_newsletter_subscribers.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function sendNewsletter() {
+    const form = document.getElementById('newsletterForm');
+    const formData = new FormData(form);
+    
+    // Implementation for sending newsletter
+    alert('Envio de newsletter será implementado em breve. Por enquanto, você pode copiar os emails e usar um serviço de email marketing externo.');
+}
+</script>
+{% endblock %}

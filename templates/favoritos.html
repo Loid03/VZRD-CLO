@@ -1,0 +1,344 @@
+{% extends "base.html" %}
+
+{% block title %}Favoritos - VZRD{% endblock %}
+
+{% block content %}
+<section class="favorites-section">
+    <div class="container">
+        <div class="section-header text-center mb-5">
+            <h1 class="section-title animate__animated animate__fadeInDown">
+                <span class="japanese-accent">お気に入り</span>
+                <br>Seus Favoritos
+            </h1>
+            <p class="section-subtitle animate__animated animate__fadeInUp animate__delay-1s">
+                Produtos que você salvou para depois
+            </p>
+        </div>
+        
+        {% if products %}
+        <div class="row">
+            {% for product in products %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="product-card animate__animated animate__fadeInUp" style="animation-delay: {{ loop.index0 * 0.1 }}s">
+                    <div class="product-image">
+                        <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-img">
+                        {% if product.featured %}
+                        <div class="product-badge">Destaque</div>
+                        {% endif %}
+                        <div class="product-overlay">
+                            <a href="{{ url_for('product_detail', product_id=product.id) }}" class="btn btn-outline-light btn-sm">
+                                <i class="fas fa-eye"></i> Ver Detalhes
+                            </a>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h5 class="product-name">{{ product.name }}</h5>
+                        <p class="product-description">{{ product.description[:80] }}...</p>
+                        <div class="product-price">R$ {{ "%.2f"|format(product.price) }}</div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary btn-add-cart" 
+                                    onclick="addToCart({{ product.id }}, '{{ product.name }}', {{ product.price }}, '{{ product.image_url }}')">
+                                <i class="fas fa-shopping-cart"></i> Adicionar
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm favorite-btn" 
+                                    onclick="toggleFavorite({{ product.id }}, this)"
+                                    data-favorited="true">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-favorites animate__animated animate__fadeIn">
+            <div class="empty-icon">
+                <i class="fas fa-heart-broken"></i>
+            </div>
+            <h3 class="empty-title">Nenhum favorito ainda</h3>
+            <p class="empty-text">
+                Navegue pelos nossos produtos e adicione seus favoritos aqui!
+            </p>
+            <a href="{{ url_for('produtos') }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-shopping-bag"></i> Ver Produtos
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+.favorites-section {
+    padding: var(--space-2xl) 0;
+    background: var(--bg-primary);
+    min-height: 80vh;
+}
+
+.section-header {
+    margin-bottom: var(--space-2xl);
+}
+
+.section-title {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    color: var(--text-primary);
+    margin-bottom: var(--space-lg);
+    text-shadow: 0 0 20px var(--purple-glow);
+}
+
+.japanese-accent {
+    font-family: var(--font-japanese);
+    color: var(--blue-neon);
+    font-size: 1.2rem;
+    text-shadow: 0 0 15px var(--blue-glow);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.product-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    padding: 0;
+    transition: var(--transition-normal);
+    overflow: hidden;
+    height: 100%;
+    position: relative;
+}
+
+.product-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(157, 78, 221, 0.05), 
+        rgba(58, 134, 255, 0.05));
+    opacity: 0;
+    transition: var(--transition-normal);
+    z-index: 1;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--purple-primary);
+    box-shadow: 0 15px 40px rgba(157, 78, 221, 0.3), 0 0 30px var(--blue-glow);
+}
+
+.product-card:hover::before {
+    opacity: 1;
+}
+
+.product-image {
+    position: relative;
+    overflow: hidden;
+    height: 250px;
+    z-index: 2;
+}
+
+.product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-normal);
+    filter: brightness(0.9) saturate(1.1);
+}
+
+.product-card:hover .product-img {
+    transform: scale(1.08);
+    filter: brightness(1) saturate(1.2);
+}
+
+.product-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: var(--transition-fast);
+}
+
+.product-card:hover .product-overlay {
+    opacity: 1;
+}
+
+.product-badge {
+    position: absolute;
+    top: var(--space-sm);
+    right: var(--space-sm);
+    background: linear-gradient(135deg, var(--purple-primary), var(--blue-neon));
+    color: white;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-family: var(--font-display);
+    z-index: 3;
+    box-shadow: 0 0 15px rgba(157, 78, 221, 0.5);
+}
+
+.product-info {
+    padding: var(--space-lg);
+    position: relative;
+    z-index: 2;
+}
+
+.product-name {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+    text-shadow: 0 0 10px rgba(157, 78, 221, 0.3);
+}
+
+.product-description {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: var(--space-md);
+    line-height: 1.5;
+}
+
+.product-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--purple-primary), var(--blue-neon));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: var(--space-md);
+    filter: drop-shadow(0 0 10px var(--purple-glow));
+}
+
+.product-actions {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: center;
+}
+
+.btn-add-cart {
+    flex: 1;
+    background: linear-gradient(135deg, var(--purple-primary), var(--blue-neon));
+    border: none;
+    color: white;
+    padding: var(--space-sm);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-family: var(--font-display);
+    transition: var(--transition-fast);
+    box-shadow: 0 0 15px rgba(157, 78, 221, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-add-cart:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(157, 78, 221, 0.5);
+}
+
+.favorite-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.empty-favorites {
+    text-align: center;
+    padding: var(--space-2xl) 0;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    color: var(--text-muted);
+    margin-bottom: var(--space-xl);
+}
+
+.empty-title {
+    font-family: var(--font-display);
+    color: var(--text-primary);
+    font-size: 1.8rem;
+    margin-bottom: var(--space-md);
+}
+
+.empty-text {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: var(--space-xl);
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .product-actions {
+        flex-direction: column;
+    }
+    
+    .favorite-btn {
+        width: 100%;
+        border-radius: var(--radius-md);
+        height: auto;
+        padding: var(--space-sm);
+    }
+}
+</style>
+
+<script>
+async function toggleFavorite(productId, button) {
+    try {
+        const response = await fetch('/api/toggle-favorite', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ product_id: productId })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            if (!data.is_favorited) {
+                // Remove the entire product card from favorites page
+                button.closest('.col-lg-4').remove();
+                
+                // Check if there are no more products
+                const remainingProducts = document.querySelectorAll('.product-card').length;
+                if (remainingProducts === 0) {
+                    location.reload(); // Reload to show empty state
+                }
+            }
+            
+            showNotification(data.message, 'success');
+        } else {
+            showNotification(data.message, 'error');
+        }
+    } catch (error) {
+        console.error('Error toggling favorite:', error);
+        showNotification('Erro ao atualizar favoritos', 'error');
+    }
+}
+</script>
+{% endblock %}

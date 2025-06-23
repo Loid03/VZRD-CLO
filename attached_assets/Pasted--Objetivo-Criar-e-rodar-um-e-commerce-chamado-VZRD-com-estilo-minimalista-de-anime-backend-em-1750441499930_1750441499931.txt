@@ -1,0 +1,77 @@
+# 🎯 Objetivo: Criar e rodar um e-commerce chamado VZRD, com estilo minimalista de anime, backend em Flask, SQLite e possibilidade de integrar Twilio depois.
+
+# 1️⃣ Instalar bibliotecas essenciais
+pip install flask flask_sqlalchemy flask_cors python-dotenv twilio
+
+# 2️⃣ Estrutura esperada do projeto:
+# .
+# ├── main.py               # Arquivo inicial do app
+# ├── app.py                # Configuração do Flask e rotas
+# ├── .env                  # Variáveis de ambiente (Twilio, DB)
+# ├── VzrdClothing/
+# │   ├── __init__.py
+# │   ├── models_db.py      # Modelos do banco de dados
+# │   └── templates/
+# │       ├── index.html    # Página principal estilizada
+# │       ├── product.html  # Página do produto
+# │       └── admin.html    # Painel admin
+# ├── static/
+# │   ├── css/
+# │   │   └── style.css     # Estilo minimalista tipo anime
+# │   └── assets/
+# │       └── logo.png      # Nova logo (substituir pela imagem enviada)
+# └── README.md
+
+# 3️⃣ Configuração de arquivos:
+
+# 🔹 main.py
+from app import app
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
+# 🔹 app.py
+# - Criar o app Flask
+# - Conectar ao SQLite com SQLAlchemy
+# - Importar models_db
+# - Criar rotas para páginas da loja, carrinho e admin
+# - Inicializar o banco com db.create_all()
+
+# 🔹 .env
+# SESSION_SECRET=segredo123
+# DATABASE_URL=sqlite:///vzrd.db
+# TWILIO_ACCOUNT_SID=...
+# TWILIO_AUTH_TOKEN=...
+# TWILIO_PHONE=...
+
+# 4️⃣ Estilização visual (em static/css/style.css)
+# - Fundo escuro (#121212 ou #0f0f0f)
+# - Tipografia moderna e limpa (Exo 2, Inter, Poppins, etc.)
+# - Paleta roxa e lilás (estilo Tokyo Night / anime cyberpunk)
+# - Botões com bordas suaves e hover animado
+# - Animações suaves ao carregar
+
+# 5️⃣ Substituir a logo
+# - Coloque a nova logo como: static/assets/logo.png
+# - No HTML: <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="VZRD Logo">
+
+# 6️⃣ Funcionalidades principais:
+# - Visualização de produtos
+# - Carrinho de compras
+# - Painel de admin com login simples
+# - Cadastro de novos produtos via formulário
+# - Integração futura com SMS Twilio
+
+# 7️⃣ Integração futura com Twilio (não obrigatório agora)
+# - Após confirmar pedido, enviar SMS:
+from twilio.rest import Client
+
+client = Client(account_sid, auth_token)
+client.messages.create(
+  body="Seu pedido na VZRD foi confirmado!",
+  from_=twilio_phone,
+  to="+55SEUNUMERO"
+)
+
+# 🔚 Pronto! Rode o main.py e acesse o site.
+# Siga testando e me avise se quiser adicionar mais páginas ou efeitos visuais!
